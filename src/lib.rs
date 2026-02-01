@@ -55,6 +55,7 @@ pub use module::{
 };
 
 pub use utils::{error_code, generate_id, generate_uuid, status_code, CoreError, Result};
+pub use utils::logger::{Logger, LoggerConfig, LoggerConfigBuilder, LogGuard, RotationStrategy, fields};
 
 pub use core::config::{
     ConfigManager, ConfigManagerBuilder, ConfigSource, CoreConfig, CoreConfigBuilder,
