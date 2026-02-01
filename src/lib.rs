@@ -56,7 +56,10 @@ pub use module::{
 
 pub use utils::{error_code, generate_id, generate_uuid, status_code, CoreError, Result};
 
-pub use core::config::CoreConfig;
+pub use core::config::{
+    ConfigManager, ConfigManagerBuilder, ConfigSource, CoreConfig, CoreConfigBuilder,
+    LogConfig, ModuleConfig, RouterConfig,
+};
 pub use api::sdk::ChipsCore;
 
 /// 库版本

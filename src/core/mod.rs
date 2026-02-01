@@ -4,4 +4,7 @@
 
 pub mod config;
 
-pub use config::CoreConfig;
+pub use config::{
+    ConfigManager, ConfigManagerBuilder, ConfigSource, CoreConfig, CoreConfigBuilder,
+    LogConfig, ModuleConfig, RouterConfig,
+};
