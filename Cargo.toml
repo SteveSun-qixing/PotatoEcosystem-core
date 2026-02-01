@@ -1,0 +1,105 @@
+[package]
+name = "chips_core"
+version = "1.0.0"
+edition = "2021"
+authors = ["Chips Team"]
+license = "MIT"
+description = "薯片生态的核心微内核 - 提供中心路由、模块管理、事件总线和配置管理"
+repository = "https://github.com/chips/core"
+documentation = "https://docs.rs/chips-core"
+readme = "README.md"
+keywords = ["microkernel", "router", "module", "plugin", "event-bus"]
+categories = ["development-tools"]
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+# 异步运行时
+tokio = { version = "1.35", features = ["full"] }
+async-trait = "0.1"
+futures = "0.3"
+
+# 序列化
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+rmp-serde = "1.1"
+
+# 版本管理
+semver = { version = "1.0", features = ["serde"] }
+
+# 时间处理
+chrono = { version = "0.4", features = ["serde"] }
+
+# UUID
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# 正则表达式
+regex = "1.10"
+
+# 日志
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+tracing-appender = "0.2"
+
+# 错误处理
+thiserror = "1.0"
+anyhow = "1.0"
+
+# 配置管理
+config = "0.14"
+
+# LRU 缓存
+lru = "0.12"
+
+# 命令行
+clap = { version = "4.4", features = ["derive"], optional = true }
+
+# 跨平台路径
+path-clean = "1.0"
+
+# 随机数
+rand = "0.8"
+
+# Base62 编码
+base62 = "2.0"
+
+[dev-dependencies]
+# 测试
+criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
+mockall = "0.12"
+tempfile = "3.10"
+tokio-test = "0.4"
+
+[lib]
+name = "chips_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "chips-core"
+path = "src/main.rs"
+
+[[bench]]
+name = "router_bench"
+harness = false
+
+[features]
+default = ["cli"]
+cli = ["clap"]
+full = ["cli"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.test]
+opt-level = 1
+debug = true
