@@ -33,6 +33,13 @@ pub enum CoreError {
     #[error("路由已存在: action '{0}'")]
     RouteAlreadyExists(String),
 
+    /// 路由请求失败
+    #[error("路由请求失败: action '{action}' - {reason}")]
+    RouteFailed {
+        action: String,
+        reason: String,
+    },
+
     /// 队列已满
     #[error("队列已满: {message}")]
     QueueFull {
@@ -249,6 +256,7 @@ impl CoreError {
             CoreError::InvalidRequest(_) => error_code::PROTOCOL_MESSAGE_FORMAT_ERROR,
             CoreError::Timeout(_) => error_code::TIMEOUT_REQUEST,
             CoreError::PermissionDenied(_) => error_code::PERMISSION_DENIED,
+            CoreError::RouteFailed { .. } => error_code::CORE_ROUTE_FAILED,
             CoreError::ModuleLoadFailed { .. } => error_code::MODULE_LOAD_FAILED,
             CoreError::ModuleUnloadFailed { .. } => error_code::MODULE_UNLOAD_FAILED,
             CoreError::CircularDependency(_) => error_code::MODULE_CIRCULAR_DEPENDENCY,
@@ -267,6 +275,7 @@ impl CoreError {
             CoreError::InvalidRequest(_) => status_code::BAD_REQUEST,
             CoreError::Timeout(_) => status_code::TIMEOUT,
             CoreError::PermissionDenied(_) => status_code::FORBIDDEN,
+            CoreError::RouteFailed { .. } => status_code::INTERNAL_ERROR,
             CoreError::ModuleAlreadyLoaded(_) => status_code::CONFLICT,
             CoreError::RouteAlreadyExists(_) => status_code::CONFLICT,
             CoreError::ConfigNotFound(_) => status_code::NOT_FOUND,

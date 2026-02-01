@@ -61,7 +61,11 @@ pub use core::config::{
     ConfigManager, ConfigManagerBuilder, ConfigSource, CoreConfig, CoreConfigBuilder,
     LogConfig, ModuleConfig, RouterConfig,
 };
-pub use api::sdk::ChipsCore;
+pub use api::sdk::{ChipsCore, CoreState, HealthInfo};
+pub use api::ipc::{
+    IpcClient, IpcConfig, IpcConfigBuilder, IpcEvent, IpcMessageType, IpcRequest,
+    IpcResponse, IpcServer, IpcServerStats, IpcTransport,
+};
 
 /// 库版本
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

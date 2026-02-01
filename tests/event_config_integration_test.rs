@@ -48,7 +48,7 @@ async fn test_event_pub_sub_full_flow() {
     assert!(received.load(Ordering::SeqCst) >= 1);
 
     // 取消订阅
-    bus.unsubscribe(&sub_id).await;
+    let _ = bus.unsubscribe(&sub_id).await;
 
     // 再次发布，不应该收到
     let before = received.load(Ordering::SeqCst);
