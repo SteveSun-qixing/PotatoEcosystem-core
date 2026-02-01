@@ -33,6 +33,13 @@ pub enum CoreError {
     #[error("路由已存在: action '{0}'")]
     RouteAlreadyExists(String),
 
+    /// 队列已满
+    #[error("队列已满: {message}")]
+    QueueFull {
+        max_size: usize,
+        message: String,
+    },
+
     // ==================== 模块管理错误 ====================
 
     /// 模块已加载
@@ -228,6 +235,9 @@ pub mod error_code {
     // 超时错误 (TIMEOUT-xxx)
     pub const TIMEOUT_REQUEST: &str = "TIMEOUT-001";
     pub const TIMEOUT_MODULE_LOAD: &str = "TIMEOUT-002";
+
+    // 队列错误 (QUEUE-xxx)
+    pub const QUEUE_FULL: &str = "QUEUE-001";
 }
 
 impl CoreError {
@@ -244,6 +254,7 @@ impl CoreError {
             CoreError::CircularDependency(_) => error_code::MODULE_CIRCULAR_DEPENDENCY,
             CoreError::ConfigNotFound(_) => error_code::CONFIG_NOT_FOUND,
             CoreError::InvalidConfigValue { .. } => error_code::CONFIG_INVALID_VALUE,
+            CoreError::QueueFull { .. } => error_code::QUEUE_FULL,
             _ => "UNKNOWN",
         }
     }
@@ -259,6 +270,7 @@ impl CoreError {
             CoreError::ModuleAlreadyLoaded(_) => status_code::CONFLICT,
             CoreError::RouteAlreadyExists(_) => status_code::CONFLICT,
             CoreError::ConfigNotFound(_) => status_code::NOT_FOUND,
+            CoreError::QueueFull { .. } => status_code::SERVICE_UNAVAILABLE,
             _ => status_code::INTERNAL_ERROR,
         }
     }
