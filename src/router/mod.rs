@@ -26,7 +26,10 @@ pub use queue::{QueueItem, QueueStats, RequestQueue};
 pub use request::{
     ErrorInfo, Priority, RouteRequest, RouteRequestBuilder, RouteResponse,
 };
-pub use route_table::{RouteEntry, RouteTable, RouteTableExport, RouteTableStats, RouteType};
+pub use route_table::{
+    RouteCache, RouteCacheStats, RouteEntry, RouteTable, RouteTableConfig, RouteTableExport,
+    RouteTableStats, RouteType,
+};
 pub use router::{ModuleHandler, Router, RouterConfig, RouterStats, RouterStatsSnapshot};
 pub use validator::{
     is_valid_action_format, parse_action, RequestValidator, ValidationError,
