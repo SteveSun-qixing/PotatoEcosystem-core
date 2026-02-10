@@ -33,6 +33,7 @@
 
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
+use std::sync::Arc;
 use tokio::signal;
 use tracing::{info, Level};
 use tracing_subscriber::{fmt, EnvFilter};
@@ -164,12 +165,21 @@ async fn run_start(config: CoreConfig) -> Result<(), Box<dyn std::error::Error>>
     let mut core = ChipsCore::new(config).await?;
     core.start().await?;
 
+    // 启动 IPC 服务器
+    info!("启动 IPC 服务器...");
+    let core_arc = Arc::new(core);
+    let ipc_config = chips_core::IpcConfig::tcp("127.0.0.1", 9527);
+    let ipc_server = chips_core::IpcServer::new(ipc_config, core_arc.clone());
+    ipc_server.start().await?;
+    info!("IPC 服务器已启动 (TCP: 127.0.0.1:9527)");
+
     println!();
     println!("╔════════════════════════════════════════════════════════╗");
     println!("║          薯片微内核已启动 (Chips Core Started)         ║");
     println!("╠════════════════════════════════════════════════════════╣");
     println!("║  版本: {}                                           ║", chips_core::VERSION);
     println!("║  协议: {}                                           ║", chips_core::PROTOCOL_VERSION);
+    println!("║  IPC:  TCP 127.0.0.1:9527                            ║");
     println!("║                                                        ║");
     println!("║  按 Ctrl+C 优雅关闭内核                                ║");
     println!("╚════════════════════════════════════════════════════════╝");
@@ -180,7 +190,9 @@ async fn run_start(config: CoreConfig) -> Result<(), Box<dyn std::error::Error>>
 
     println!();
     info!("收到关闭信号，正在优雅关闭...");
-    core.shutdown().await?;
+    ipc_server.stop().await?;
+    // 注意：core 的清理会在 Arc 引用计数归零时自动进行
+    drop(core_arc);
     info!("薯片微内核已关闭");
 
     Ok(())
